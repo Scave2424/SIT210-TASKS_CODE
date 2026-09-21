@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Lighting Control</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 50px 20px;
+            background-color: #f4f6f8;
+            color: #222;
+        }
+
+        h1 {
+            margin-bottom: 35px;
+        }
+
+        
+        .room {
+            display: inline-block;
+            width: 220px;
+            margin: 15px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .room h2 {
+            margin-top: 0;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            background-color: #2563eb;
+            color: white;
+        }
+
+        /* Give feedback when the user moves over a button. */
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        #status {
+            margin: 35px auto 0;
+            padding: 12px;
+            max-width: 500px;
+            background-color: white;
+            border-radius: 6px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Home Lighting Control</h1>
+
+    <div class="room">
+        <h2>Living Room</h2>
+        <button onclick="toggleLight('livingroom', 'Living Room')">
+            Toggle Light
+        </button>
+    </div>
+
+    <div class="room">
+        <h2>Bathroom</h2>
+        <button onclick="toggleLight('bathroom', 'Bathroom')">
+            Toggle Light
+        </button>
+    </div>
+
+    <div class="room">
+        <h2>Closet</h2>
+        <button onclick="toggleLight('closet', 'Closet')">
+            Toggle Light
+        </button>
+    </div>
+
+    <p id="status">System ready</p>
+
+    <script>
+
+        // Send the selected room command to server.js.
+        async function toggleLight(room, roomName) {
+
+            document.getElementById("status").innerText =
+                `Sending command to ${roomName}...`;
+
+            try {
+
+                const response = await fetch(`/toggle?room=${room}`);
+                const message = await response.text();
+
+                // Display the response returned after the Arduino handles the command.
+                document.getElementById("status").innerText =
+                    `${roomName}: ${message}`;
+
+            } catch (error) {
+
+                document.getElementById("status").innerText =
+                    "Unable to send command";
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
